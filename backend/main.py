@@ -49,16 +49,18 @@ def predict():
         input_df = pd.DataFrame({
             'Temperature': [data.get('temperature', 0)],
             'Humidity': [data.get('humidity', 0)],
-            'Wind_Speed': [data.get('wind_speed', 0)],
-            'Precipitation': [data.get('precipitation', 0)],
-            'Cloud_Cover': [data.get('cloud_cover', '')],
-            'Atmospheric_Pressure': [data.get('atmospheric_pressure', 0)],
-            'UV_Index': [data.get('uv_index', 0)],
+            'Wind Speed': [data.get('wind_speed', 0)],
+            'Precipitation (%)': [data.get('precipitation', 0)],
+            'Cloud Cover': [data.get('cloud_cover', '')],
+            'Atmospheric Pressure': [data.get('atmospheric_pressure', 0)],
+            'UV Index': [data.get('uv_index', 0)],
             'Season': [data.get('season', '')],
-            'Visibility': [data.get('visibility', 0)],
+            'Visibility (km)': [data.get('visibility', 0)],
             'Location': [data.get('location', '')]
         })
         
+        print("Input DataFrame:", input_df)  # Debugging line
+
         # Faz a predição
         prediction_encoded = model.predict(input_df)
         prediction = le.inverse_transform(prediction_encoded)[0]
@@ -89,7 +91,7 @@ def predict():
         return jsonify(response)
     
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return jsonify({'error': repr(e)}), 500
 
 @app.route('/predictions', methods=['GET'])
 def get_predictions():
