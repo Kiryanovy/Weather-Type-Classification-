@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import api from '../services/api';
 
 const PredictionsTable = () => {
@@ -12,11 +12,7 @@ const PredictionsTable = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    fetchPredictions();
-  }, [pagination.page]);
-
-  const fetchPredictions = async () => {
+  const fetchPredictions = useCallback(async () => {
     setLoading(true);
     try {
       const response = await api.getPredictions(pagination.page, pagination.per_page);
@@ -31,7 +27,11 @@ const PredictionsTable = () => {
       setError('Failed to load predictions');
       setLoading(false);
     }
-  };
+  }, [pagination.page, pagination.per_page]);
+  
+  useEffect(() => {
+    fetchPredictions();
+  }, [fetchPredictions]);
 
   const handleNextPage = () => {
     if (pagination.page < pagination.pages) {
